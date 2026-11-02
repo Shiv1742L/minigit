@@ -45,7 +45,7 @@ def _stage_deletions(index, repo, raw):
         e.path
         for e in index
         if (relative == "" or e.path == relative or e.path.startswith(relative + "/"))
-        and not (repo.worktree / e.path).exists()
+        and not (repo.worktree / e.path).is_file()
     ]
     for path in deleted:
         index.remove(path)

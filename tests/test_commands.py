@@ -261,6 +261,18 @@ def test_add_stages_deletion_of_removed_file(repo, run, write):
     assert [e.path for e in Index.load(repo)] == ["keep.txt"]
 
 
+def test_add_stages_deletion_when_file_is_replaced_by_empty_directory(repo, run, write):
+    write("item", "tracked file\n")
+    run("add", "item")
+    (repo.worktree / "item").unlink()
+    (repo.worktree / "item").mkdir()
+
+    result = run("add", "item")
+
+    assert result.code == 0
+    assert Index.load(repo).get("item") is None
+
+
 def test_add_updates_changed_file(repo, run, write):
     write("hello.txt", "hello\n")
     run("add", "hello.txt")
